@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Melbourne Tweet Analysis</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h3>Tweet Sentiment vs Selected Aurin PHIDU Dataset</h3>
+<div id="map"></div>
+<div id="help">
+    <FORM NAME="checks">
+        <b>Visualise or Correlate</b>
+
+        <INPUT TYPE="checkbox" NAME="high_blood_pressure"
+               onClick="return refreshDataNew()"> High Blood Pressure
+
+        <INPUT TYPE="checkbox" NAME="high_psychological_distress"
+               onClick="return refreshDataNew()"> High Psychological Distress
+
+        <INPUT TYPE="checkbox" NAME="overweight"
+               onClick="return refreshDataNew()"> Overweight
+
+        <INPUT TYPE="checkbox" NAME="obese"
+               onClick="return refreshDataNew()"> Obese
+
+        <INPUT TYPE="checkbox" NAME="overweightAndObese"
+               onClick="return refreshDataNew()"> Overweight and Obese
+
+        <INPUT TYPE="checkbox" NAME="tweetCount"
+               onClick="return refreshDataNew()"> Tweet Count
+
+        <INPUT TYPE="checkbox" NAME="tweetPolarity"
+               onClick="return refreshDataNew()"> Tweet Polarity
+
+    </FORM>
+</div>
+<div>
+    <p>COMP90049</p>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.functions.js"></script>
+<script src="functions.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-NE1FOAKpSJNGHkNMRd48mD28l-QgKLw&callback=initMap">
+</script>
+</body>
+</html>
