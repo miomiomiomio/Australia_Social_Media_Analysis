@@ -7,7 +7,6 @@ import sys
 import fiona
 import time
 from textblob import TextBlob
-from tweetAnalyzer import TweetAnalyzer
 from shapely.geometry import shape, Point
 
 new_database = "processed_tweets"
@@ -65,6 +64,8 @@ def view_processed_data(db):
         analysis.polarity = sum(values);
         return analysis;
     }"""
+    # analysis.count = values.length 意思是有多少条记录
+    # analysis.polarity = sum(values) 意思是把这些记录的值加起来
     view=design.ViewDefinition('sentiment_analysis','sentiment_analysis',map_fnc,reduce_fun=reduce_fnc)
     view.sync(db)
 
@@ -82,12 +83,10 @@ def tag_tweets(db_raw, db_pro, multipol):
             raw = tweet['coordinates']
             coords = tuple(raw['coordinates'])
         # Get the midpoint of this twitter.
-        elif tweet['place']['bounding_box']['coordinates']:
+        elif tweet['place']:
                 coords = average_bounding_box(
                     tweet['place']['bounding_box']['coordinates']
                 )
-        else:
-            logging.INFO('Coordinates not found')
 
         # Attempt to process if location exists.
         if coords:
@@ -98,8 +97,10 @@ def tag_tweets(db_raw, db_pro, multipol):
                     code = multi['properties']['phn_code']
                     sentiment = TweetAnalyzer(tweet).analyzeSentiment()
                     stored_tweet = {
-                        '_id': id, 'code': code,
-                        'text': tweet['text'], 'sentiment': sentiment,
+                        '_id': id,
+                        'code': code,
+                        'text': tweet['text'],
+                        'sentiment': sentiment,
                         }
                     db_pro.save(stored_tweet)
                     break
