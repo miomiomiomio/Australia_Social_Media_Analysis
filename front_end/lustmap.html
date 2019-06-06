@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Melbourne Tweet Analysis</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h3>Tweet Lust Analysis vs BOCSAR Domestic Violence Incidents Dataset</h3>
+<div id="map"></div>
+<div id="help">
+    <FORM NAME="checks">
+        <b>Visualise or Correlate</b>
+
+        <INPUT TYPE="checkbox" NAME="number_of_incidents"
+               onClick="return refreshDataNew()"> Number of Incidents
+
+        <INPUT TYPE="checkbox" NAME="incident_rate"
+               onClick="return refreshDataNew()"> High Incident Rate
+
+        <INPUT TYPE="checkbox" NAME="tweetCount"
+               onClick="return refreshDataNew()"> Tweet Count
+
+        <INPUT TYPE="checkbox" NAME="tweetPolarity"
+               onClick="return refreshDataNew()"> Tweet Polarity
+
+    </FORM>
+</div>
+<div>
+    <p>COMP90024</p>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.lust_function.js"></script>
+<script src="lust_function.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-NE1FOAKpSJNGHkNMRd48mD28l-QgKLw&callback=initMap">
+</script>
+</body>
+</html>
