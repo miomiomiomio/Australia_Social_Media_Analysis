@@ -1,0 +1,7 @@
+Python            3.5.2
+CouchDB           1.2
+tweepy            3.7.0
+GDAL              2.4.0
+Fiona             1.8.6
+textblob          0.15.3
+Shapely           1.6.4.post2
