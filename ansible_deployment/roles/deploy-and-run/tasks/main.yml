@@ -1,0 +1,30 @@
+---
+- name: Send docker-compose file
+  copy:
+    src: ~/Desktop/ansible_deployment/dockerFileFolder/docker-compose.yml
+    dest: ~/
+  when: ansible_host == groups.System_group.0
+
+- name: Execute production
+  docker_stack:
+    state: present
+    name: Mission
+    compose:
+      - ~/docker-compose.yml
+  when: ansible_host == groups.System_group.0
+
+- name: Install nginx
+  shell: |
+    apt install nginx
+  when: ansible_host == groups.System_group.1
+
+- name: Config nginx
+  template: 
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  when: ansible_host == groups.System_group.1
+
+- name: Reload it
+  shell: |
+    nginx -s reload
+  when: ansible_host == groups.System_group.1

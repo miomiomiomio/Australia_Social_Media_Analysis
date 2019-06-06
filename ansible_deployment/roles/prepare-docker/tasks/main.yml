@@ -1,0 +1,59 @@
+---
+# - name:  Install and config docker (shell command part)
+#   shell: |
+#     apt install -y python-pip
+#     apt install -y docker.io
+#     pip install docker-compose==1.9.0
+#     pip install jsondiff
+#     mkdir -p /etc/systemd/system/docker.service.d
+#     touch /etc/systemd/system/docker.service.d/http-proxy.conf
+#     echo "[Service]\nEnvironment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/"" > /etc/systemd/system/docker.service.d/http-proxy.conf
+#     systemctl daemon-reload
+#     systemctl restart docker
+
+# (modular part)
+- name: Install pip
+  apt: 
+    name: python-pip
+    force_apt_get: yes
+    state: latest
+    update_cache: yes
+
+- name: Install docker.io
+  apt: 
+    name: docker.io
+    force_apt_get: yes
+    state: latest
+    update_cache: yes
+
+- name: Install docker-compose
+  pip: 
+    name: docker-compose
+    state: latest
+
+- name: Install jsondiff
+  pip: 
+    name: jsondiff
+    state: latest
+
+- name: Create config folder
+  file: 
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: Create config file
+  file: 
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    state: touch
+
+- name: Configure proxy parameters
+  blockinfile:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    block: |
+      [Service]
+      Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/"
+
+- name: Restart docker
+  shell: |
+    systemctl daemon-reload
+    systemctl restart docker

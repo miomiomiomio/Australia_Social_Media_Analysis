@@ -1,0 +1,99 @@
+- hosts: Back_end_group
+  # 以ubuntu的用户身份登陆
+  remote_user: ubuntu
+  # 会覆盖这组hosts对象底下所有的操作权限
+  become: yes
+  gather_facts: true
+
+  tasks:
+    # - name: Update all packages to the latest version
+    #   apt:
+    #     name: aptitude 
+    #     upgrade: yes
+    # - name: Update all packages to the latest version
+    #   apt:
+    #     name: aptitude 
+    #     upgrade: true
+
+    # - name: Install nginx
+    #   apt: 
+    #     name: nginx
+    #     force_apt_get: yes
+    #     state: absent
+    #     update_cache: yes
+
+    - name: wer
+      template: 
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+  # roles:
+  #   - role: z2
+
+# ------------------------------------------------------------------------------------------------------------------------
+
+#   tasks:
+#   - name: Run containers of couchDB on different VMs
+#     shell: |
+#       # docker pull couchdb:2.3.0
+#       docker run -d --network host --name couchDB couchdb:latest
+#       docker exec -it couchDB bash -c "echo \"-setcookie couchdb_cluster\" >> /opt/couchdb/etc/vm.args"
+#       docker exec -it couchDB bash -c "echo \"-name couchdb@'{{ ansible_host }}'\" >> /opt/couchdb/etc/vm.args"
+#       docker restart couchDB
+      
+#   - name: Wait for 30s
+#     wait_for: timeout=30
+
+#   - name: Set name and password in each couchDB
+#     raw: |
+#       # curl -XPUT "http://${node}:5984/_node/_local/_config/admins/${user}" --data "\"${pass}\"" 
+#       curl -X PUT http://'{{ ansible_host }}':5984/_node/_local/_config/admins/qwe --data '"qwe"'
+#       #  curl -XPUT "http://${user}:${pass}@${node}:5984/_node/couchdb@${node}/_config/chttpd/bind_address" --data '"0.0.0.0"'
+#       curl -X PUT http://qwe:qwe@'{{ ansible_host }}':5984/_node/couchdb@'{{ ansible_host }}'/_config/chttpd/bind_address --data '"0.0.0.0"'
+
+#   - name: Enable couchDB to join a cluster 
+#     raw: | 
+#       # curl -X POST -H "Content-Type: application/json" http://admin:password@127.0.0.1:5984/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"password", "node_count":"3"}'
+#       curl -X POST -H "Content-Type:application/json" http://qwe:qwe@'{{ ansible_host }}':5984/_cluster_setup -d '{"action":"enable_cluster", "bind_address":"0.0.0.0", "username":"qwe", "password":"qwe", "node_count":"2"}'
+
+#   - name: Choose one node as the “setup coordination node” and make others join the cluster
+#     raw: |
+#       # curl -X POST -H "Content-Type: application/json" http://admin:password@<setup-coordination-node>:5984/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"password", "port": 5984, "node_count": "3", "remote_node": "<remote-node-ip>", "remote_current_user": "<remote-node-username>", "remote_current_password": "<remote-node-password>" }'
+#       curl -X POST -H "Content-Type:application/json" http://qwe:qwe@'{{ groups.worker_group.0 }}':5984/_cluster_setup -d '{"action":"enable_cluster", "bind_address":"0.0.0.0", "username":"qwe", "password":"qwe", "port":5984, "node_count":"2", "remote_node":"'{{ groups.worker_group.0 }}'", "remote_current_user":"qwe", "remote_current_password":"qwe" }'
+#       # curl -X POST -H "Content-Type: application/json" http://admin:password@<setup-coordination-node>:5984/_cluster_setup -d '{"action": "add_node", "host":"<remote-node-ip>", "port": <remote-node-port>, "username": "admin", "password":"password"}'
+#       curl -X POST -H "Content-Type:application/json" http://qwe:qwe@'{{ groups.worker_group.0 }}':5984/_cluster_setup -d '{"action":"add_node", "host":"'{{ ansible_host }}'", "port":5984, "username":"qwe", "password":"qwe"}'
+#     when: ansible_host !=  groups.worker_group.0
+  
+#   - name: Finish the construction of cluster
+#     raw: |
+#       # curl -X POST -H "Content-Type: application/json" http://admin:password@<setup-coordination-node>:5984/_cluster_setup -d '{"action": "finish_cluster"}'
+#       curl -X POST -H "Content-Type:application/json" http://qwe:qwe@'{{ groups.worker_group.0 }}':5984/_cluster_setup -d '{"action":"finish_cluster"}'
+#     when: ansible_host == groups.worker_group.1
+
+# #   - name: s5
+# #     raw: |
+# #       rev=`curl -XGET "http://'{{ groups.worker_group.0 }}':5986/_nodes/nonode@nohost" --user "123:123" | sed -e 's/[{}"]//g' | cut -f3 -d:`
+# #       curl -X DELETE "http://'{{ groups.worker_group.0 }}':5986/_nodes/nonode@nohost?rev=${rev}"  --user "123:123"
+# #     when: ansible_host == groups.worker_group.1
+
+  # - name: Install pip
+  #   apt:
+  #     name: ['python-pip']
+  #     # name: pip
+  #     state: latest
+  #     # update_cache: yes 
+  #   when: ansible_distribution == "Ubuntu"
+
+  # - name: Install docker.io
+  #   apt: 
+  #     name: docker.io
+  #     state: latest
+  
+  # - name: Install docker-compose
+  #   pip: 
+  #     name: docker-compose
+  #     state: latest
+  
+  # - name: Install jsondiff
+  #   pip: 
+  #     name: jsondiff
+  #     state: latest

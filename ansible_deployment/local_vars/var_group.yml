@@ -1,0 +1,79 @@
+# Common vars
+availability_zone: melbourne-qh2-uom
+
+# Volume
+volumes: 
+  - vol_name: vol-1
+    vol_size: 70
+  - vol_name: vol-2
+    vol_size: 70
+  - vol_name: vol-3
+    vol_size: 70
+  - vol_name: web-vol
+    vol_size: 30
+
+# Security group
+security_groups:
+  - name: HTTP
+    description: Allows HTTP (port 80) and HTTPS (port 443)
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+  - name: SSH
+    description: Allow SSH (port 22)
+    protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    remote_ip_prefix: 0.0.0.0/0
+  - name: couchDB
+    description: Open port 5984
+    protocol: tcp
+    port_range_min: 5984
+    port_range_max: 5984
+    remote_ip_prefix: 0.0.0.0/0
+  - name: Visualizer
+    description: Monitor situation 
+    protocol: tcp
+    port_range_min: 8080
+    port_range_max: 8080
+    remote_ip_prefix: 0.0.0.0/0
+  - name: web_port
+    description: This port open for visiting web
+    protocol: tcp
+    port_range_min: 5000
+    port_range_max: 5000
+    remote_ip_prefix: 0.0.0.0/0
+  - name: Internal
+    description: This is internal group
+
+internal_group:
+  - name: Internal
+    description: This is internal group
+    protocol: tcp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_group: Internal
+  - name: Internal
+    description: This is internal group
+    protocol: udp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_group: Internal
+  - name: Internal
+    description: This is internal group
+    protocol: icmp
+    port_range_min: 0
+    port_range_max: 255
+    remote_group: Internal
+
+# Instance
+instance_name: 
+  - server_one
+  - server_two
+  - server_three
+  - web_server
+instance_image: 703d4362-dea8-425b-8654-313d50d40e03  # Ubuntu 18.04 LTS (Bionic) amd64 (with Docker)
+instance_key_name: Shaochuan Luo Beta
+instance_flavor: uom.mse.2c9g
+instance_network: qh2-uom-internal

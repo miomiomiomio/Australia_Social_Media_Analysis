@@ -1,0 +1,99 @@
+version: "3"
+
+services:
+
+  newharvester:
+    image: bububiubiu/newharvester:good
+    networks:
+      - outside
+    depends_on:
+      - couchDB
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.hostname != web-server]
+  
+  search_by_name:
+    image: bububiubiu/search_by_name:good
+    networks:
+      - outside
+    depends_on:
+      - newharvester
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.hostname != web-server]
+  
+  process:
+    image: bububiubiu/process:good
+    networks:
+      - outside
+    depends_on:
+      - newharvester
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.hostname != web-server]
+
+  gluttony_analysis:
+    image: bububiubiu/gluttony_analysis:good
+    networks:
+      - outside
+    depends_on:
+      - newharvester
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.hostname != web-server]
+  
+  retriver:
+    image: bububiubiu/processed_twitter_retriver:good
+    networks:
+      - outside
+    deploy:
+      placement:
+        constraints: [node.hostname == web-server] 
+  
+  webapp:
+    image: bububiubiu/webapp:p5000
+    networks:
+      - outside
+    deploy:
+      placement:
+        constraints: [node.hostname == web-server] 
+  
+  visualizer:
+    image: dockersamples/visualizer
+    ports:
+      - "8080:8080"
+    stop_grace_period: 30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  outside:
+    external:
+      name: "host"
+
+# ---------------------------------------------------------------------------------
+
+  # couchDB:
+  #   image: couchdb
+  #   networks:
+  #     - outside
+  #   volumes:
+  #     - /twitter_data:/opt/couchdb/data
+  #   # restart: always
+  #   # environment:
+  #   #   COUCHDB_USER: xiong
+  #   #   COUCHDB_PASSWORD: xiong666
+  #   deploy:
+  #     # mode: replicated
+  #     mode: global
+  #     placement:
+  #       constraints: [node.hostname != web-server]
+  #     # replicas: 2
+

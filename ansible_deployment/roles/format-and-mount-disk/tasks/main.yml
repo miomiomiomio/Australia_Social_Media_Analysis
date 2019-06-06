@@ -1,0 +1,14 @@
+---
+- name: Format disk
+  filesystem: 
+    fstype: ext4 
+    dev: /dev/vdb
+    force: true
+
+- name: Mount volume
+  mount:
+    path: /twitter_data
+    src: /dev/vdb
+    fstype: ext4
+    state: mounted
+

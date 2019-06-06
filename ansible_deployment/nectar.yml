@@ -1,0 +1,41 @@
+---
+- hosts: localhost
+  vars_files:
+    - local_vars/var_group.yml
+  gather_facts: true
+  roles:
+    - role: images
+    - role: security-group
+    - role: volume
+    - role: instances
+
+  post_tasks:
+    - name: sleep for 100 seconds and continue with play
+      wait_for: timeout=100
+
+- hosts: System_group
+  remote_user: ubuntu
+  become: yes
+  gather_facts: true
+
+  pre_tasks:
+    - name: Create data folder
+      file: 
+        path: /twitter_data
+        state: directory
+    
+    - name: Configure proxy parameters
+      blockinfile:
+        path: /etc/environment
+        block: |
+          http_proxy="http://wwwproxy.unimelb.edu.au:8000"
+          https_proxy="http://wwwproxy.unimelb.edu.au:8000"
+          ftp_proxy="http://wwwproxy.unimelb.edu.au:8000"
+          no_proxy=localhost,127.0.0.1,127.0.1.1,ubuntu
+
+  roles:
+    - role: format-and-mount-disk
+    - role: prepare-docker
+    - role: build-DB-cluster
+    - role: create-and-join-swarm
+    - role: deploy-and-run

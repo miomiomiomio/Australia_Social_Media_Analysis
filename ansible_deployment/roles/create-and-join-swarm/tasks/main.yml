@@ -1,0 +1,19 @@
+---
+- name: Init a new swarm with default parameters
+  docker_swarm:
+    state: present
+  register: result_of_init_swarm
+  when: ansible_host ==  groups.System_group.0
+
+- name: Get worker token
+  set_fact:
+      worker_token: '{{ result_of_init_swarm.swarm_facts.JoinTokens.Worker }}'
+  when: ansible_host ==  groups.System_group.0
+
+- name: Join a swarm
+  docker_swarm:
+      state: join
+      advertise_addr: '{{ ansible_host }}'
+      join_token: "{{ hostvars[ groups.System_group.0 ].worker_token  }}"
+      remote_addrs: [ "{{ groups.System_group.0 }}:2377" ]
+  when: ansible_host != groups.System_group.0

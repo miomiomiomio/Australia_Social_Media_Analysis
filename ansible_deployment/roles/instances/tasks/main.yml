@@ -1,0 +1,40 @@
+---
+# Launch instances
+- name: Create server instances
+  os_server:
+    name: '{{ item.0 }}'
+    image: '{{ instance_image }}'
+    key_name: '{{ instance_key_name }}'
+    flavor: '{{ instance_flavor }}'
+    availability_zone: '{{ availability_zone }}'
+    security_groups: '{{ sg_names }}'
+    network: '{{ instance_network }}'
+    volumes: '{{ item.1 }}'
+    auto_floating_ip: yes
+    wait: yes
+    state: present
+  with_together:
+    - '{{ instance_name }}'
+    - '{{ os_vol_ids }}'
+  register: result_info
+
+# 可以做一些说明
+# web-server不需要Visualizer，couchDB
+- name: Modify host_list
+  blockinfile:
+    path: ~/Desktop/ansible_deployment/inventory/host_list
+    block: |
+      [Back_end_group]
+      {{ result_info.results.0.openstack.public_v4 }}
+      {{ result_info.results.1.openstack.public_v4 }}
+      {{ result_info.results.2.openstack.public_v4 }}
+      [Front_end_group]
+      {{ result_info.results.3.openstack.public_v4 }}
+
+- name: Generate in-memory group
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: System_group
+  with_items: '{{ result_info.results }}'
+  loop_control:
+    label: '{{ item.openstack.name }}'

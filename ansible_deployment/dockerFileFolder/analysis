@@ -1,0 +1,24 @@
+FROM python:3.6
+
+ENV http_proxy="http://wwwproxy.unimelb.edu.au:8000"
+ENV https_proxy="http://wwwproxy.unimelb.edu.au:8000"
+ENV ftp_proxy="http://wwwproxy.unimelb.edu.au:8000"
+
+ADD PHIDU.json /
+ADD gluttony_keywords.py /
+ADD download_punkt.py /
+ADD gluttony_analysis.py /
+
+RUN pip install nltk
+RUN pip install vaderSentiment
+RUN pip install tweepy
+RUN pip install CouchDB
+RUN pip install textblob
+RUN pip install shapely
+RUN pip install numpy
+RUN apt-get update
+RUN apt-get install -y libgdal-dev
+RUN pip install fiona
+RUN python3 download_punkt.py
+
+CMD [ "python3", "./gluttony_analysis.py" ]
